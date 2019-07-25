@@ -154,6 +154,12 @@ namespace com.victorafael.EditorEditor {
             if (selectedItem != null)
                 selectedItem.Selected = false;
 
+            if(obj == rootItem) {
+                selectedItem = null;
+                ClearSelection();
+                return;
+            }
+
             inspector.SetupInspector(obj.targetElement);
             selectedItem = obj;
             selectedItem.Selected = true;
@@ -165,18 +171,21 @@ namespace com.victorafael.EditorEditor {
                 case KeyCode.Backspace:
                     if (selectedItem != null) {
                         selectedItem.Destroy();
-                        selectedItem = null;
-                        inspector.Clear();
+                        ClearSelection();
                     }
                     break;
                 case KeyCode.Escape:
                     if (selectedItem != null) {
                         selectedItem.Selected = false;
-                        selectedItem = null;
-                        inspector.Clear();
+                        ClearSelection();
                     }
                     break;
             }
+        }
+
+        void ClearSelection() {
+            selectedItem = null;
+            inspector.Clear();
         }
 
         private void OnClickToolbarItem<T>(ToolbarButton<T> button) where T : VisualElement {

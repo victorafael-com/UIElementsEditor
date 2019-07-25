@@ -64,7 +64,7 @@ namespace com.victorafael.EditorEditor {
         }
 
         void OnClickHandler() {
-            if (onClick != null && !IsRoot) {
+            if (onClick != null) {
                 onClick?.Invoke(this);
             }
         }
