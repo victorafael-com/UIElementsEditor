@@ -64,10 +64,6 @@ namespace com.victorafael.EditorEditor {
 
             rootItem.AppendTo(treeViewContainer);
 
-            for (int i = 0; i < 3; i++) {
-                CreateTestLabel();
-            }
-
             //Inspector
             inspector = new ElementInspector(root.Q<VisualElement>("inspectorRoot"));
             inspector.onChangeProperty += OnChangeInspector;
@@ -97,8 +93,8 @@ namespace com.victorafael.EditorEditor {
         void CreateToolbar() {
             VisualElement layoutArea = CreateToolbarArea("Layout");
 
-            CreateButton<VisualElement>("empty-horizontal.png", "Horizontal", layoutArea, (VisualElement ve) => ve.style.flexDirection = FlexDirection.Row);
             CreateButton<VisualElement>("empty-vertical.png", "Vertical", layoutArea);
+            CreateButton<VisualElement>("empty-horizontal.png", "Horizontal", layoutArea, (VisualElement ve) => ve.style.flexDirection = FlexDirection.Row);
             CreateButton<Label>("label.png", "Label", layoutArea, (Label l) => l.text = "New Label");
 
             VisualElement inputArea = CreateToolbarArea("Input");
@@ -121,22 +117,6 @@ namespace com.victorafael.EditorEditor {
             toolbarRoot.Add(root);
 
             return root;
-        }
-
-        void CreateTestLabel() {
-            var label = new Label();
-
-            int id = UnityEngine.Random.Range(1, 5000);
-            label.text = "Random: " + id;
-            if (UnityEngine.Random.value < 0.5f) {
-                label.name = "label_" + id;
-            }
-
-            previewRoot.Add(label);
-
-            var treeViewItem = CreateTreeViewItem(label);
-
-            SetParent(label, previewRoot);
         }
 
         TreeViewItem CreateTreeViewItem(VisualElement element) {
