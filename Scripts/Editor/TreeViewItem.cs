@@ -107,6 +107,7 @@ namespace com.victorafael.EditorEditor {
         }
 
         public void Destroy() {
+            targetElement.RemoveFromHierarchy();
             root.RemoveFromHierarchy();
         }
 

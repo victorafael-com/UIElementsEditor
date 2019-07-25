@@ -70,12 +70,10 @@ namespace com.victorafael.EditorEditor {
             //Inspector
             inspector = new ElementInspector(root.Q<VisualElement>("inspectorRoot"));
             inspector.onChangeProperty += OnChangeInspector;
-
-
+            
             //Toolbar
             toolbarRoot = root.Q<VisualElement>("toolbarRoot");
             CreateToolbar();
-
 
             ///////
             var button = new Button(() => {
@@ -83,6 +81,16 @@ namespace com.victorafael.EditorEditor {
             });
             button.text = "Reload";
             root.Add(button);
+        }
+
+        private void OnGUI() {
+            //I will evaluate keyboard events here while I'm trying to figure out how to handle them on UIElements
+            var evt = Event.current;
+            switch (evt.type) {
+                case EventType.KeyUp:
+                    OnKeyUp(evt);
+                    break;
+            }
         }
 
         void CreateToolbar() {
@@ -139,9 +147,30 @@ namespace com.victorafael.EditorEditor {
         private void OnClickTreeViewItem(TreeViewItem obj) {
             if (selectedItem != null)
                 selectedItem.Selected = false;
+
             inspector.SetupInspector(obj.targetElement);
             selectedItem = obj;
             selectedItem.Selected = true;
+        }
+
+        private void OnKeyUp(Event evt) {
+            switch (evt.keyCode) {
+                case KeyCode.Delete:
+                case KeyCode.Backspace:
+                    if (selectedItem != null) {
+                        selectedItem.Destroy();
+                        selectedItem = null;
+                        inspector.Clear();
+                    }
+                    break;
+                case KeyCode.Escape:
+                    if (selectedItem != null) {
+                        selectedItem.Selected = false;
+                        selectedItem = null;
+                        inspector.Clear();
+                    }
+                    break;
+            }
         }
 
         void SetParent(VisualElement element, VisualElement newParent, int index = -1) {

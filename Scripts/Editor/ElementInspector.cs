@@ -22,8 +22,12 @@ namespace com.victorafael.EditorEditor {
             this.root = root;
         }
 
-        public void SetupInspector(VisualElement element) {
+        public void Clear() {
             root.Clear();
+        }
+
+        public void SetupInspector(VisualElement element) {
+            Clear();
 
             target = element;
 
