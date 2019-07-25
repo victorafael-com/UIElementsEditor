@@ -1,0 +1,60 @@
+.eeditor-root{
+    flex-direction:row;
+    min-width:800px;
+    padding:10px;
+}
+
+.eeditor-toolbar{
+	width: 50px;
+}
+.eeditor-panel{ 
+    width:250px;
+    margin-left:5px;
+}
+.eeditor-flexSize{
+    flex-grow:10;
+}
+
+.eeditor-panelTitle{
+    font-weight:bold;
+    font-size:12px;
+}
+
+/*** Tree View ***/
+.eeditor-treeViewElementLine {
+    flex-direction: row;
+    margin-right:5px;
+    background-image:none; 
+    padding:0;
+}
+.eeditor-treeViewElementLine:hover{
+    background-color:rgba(0,0,0,0.05);
+}
+.eeditor-selected .eeditor-treeViewElementLine {
+    background-color: rgba(0,180,255,0.4);
+}
+
+.eeditor-treeViewElementType {
+    font-size: 11px;
+}
+.eeditor-treeViewElementName{
+    font-size:10px;
+    color:#006;
+}
+.eeditor-dropLine{
+    background-color:rgba(0,100,255, 0.4);
+    margin-right:5px;
+    height:2px;
+    display:none;
+}
+.eeditor-invisible *{
+    opacity: 0.3;
+}
+/*** Preview ***/
+.eeditor-previewContainer {
+    border: 1px solid #000;
+}
+
+.eeditor-treeViewLineChildren {
+    padding-left: 20px;
+}

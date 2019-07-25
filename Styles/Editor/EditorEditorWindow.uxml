@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UXML
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xmlns:upm="UnityEditor.PackageManager.UI"
+
+xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+xsi:schemaLocation="
+  UnityEngine.UIElements ../../../../UIElementsSchema/UnityEngine.UIElements.xsd
+  UnityEditor.UIElements ../../../../UIElementsSchema/UnityEditor.UIElements.xsd
+  UnityEditor.PackageManager.UI ../../../../UIElementsSchema/UnityEditor.PackageManager.UI.xsd
+">
+  
+  <VisualElement class="eeditor-root">
+    
+    <VisualElement class="eeditor-toolbar">
+      <Button text="Empty"></Button>
+      <Button text="Label"></Button>
+      <Button text="Button"></Button>
+    </VisualElement>
+    
+    <VisualElement class="eeditor-panel">
+      <Label text="Tree View" class="eeditor-panelTitle"/>
+      <Box name="treeViewContainer">
+        
+      </Box>
+    </VisualElement>
+    
+    <PopupWindow name="PreviewRoot" text="Preview" class="eeditor-previewContainer eeditor-panel eeditor-flexSize">
+        
+    </PopupWindow>
+
+    <VisualElement class="eeditor-panel">
+      <Label text="Properties" class="eeditor-panelTitle"/>
+      <VisualElement name="inspectorRoot" class="eeditor-inspectorRoot">
+        
+      </VisualElement>
+    </VisualElement>
+    
+    
+  </VisualElement>
+  
+</UXML>

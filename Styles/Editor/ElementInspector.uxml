@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UXML
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="UnityEngine.UIElements"
+  xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+  xsi:schemaLocation="UnityEngine.UIElements ../../../../UIElementsSchema/UnityEngine.UIElements.xsd">
+
+  <VisualElement class="eeditor-treeViewLineContent">
+    <VisualElement name="dragHandler" class="eeditor-treeViewElementLine">
+      <Foldout name="expandChildren"></Foldout>
+      <Label text="{ElementType}" name="elementType" class="eeditor-treeViewElementType"/>
+      <Label text="{ElementName}" name="elementName" class="eeditor-treeViewElementName"/>
+    </VisualElement>
+
+    <VisualElement name="container" class="eeditor-treeViewLineChildren">
+      <VisualElement name="dropLine" class="eeditor-dropLine"></VisualElement>
+    </VisualElement>
+  </VisualElement>
+
+</UXML>
