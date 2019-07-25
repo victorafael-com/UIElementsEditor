@@ -43,7 +43,7 @@
 .eeditor-treeViewElementLine:hover{
     background-color:rgba(0,0,0,0.05);
 }
-.eeditor-selected .eeditor-treeViewElementLine {
+.eeditor-selected>VisualElement>.eeditor-treeViewElementLine {
     background-color: rgba(0,180,255,0.4);
 }
 

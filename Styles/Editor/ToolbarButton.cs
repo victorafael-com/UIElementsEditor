@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 
 namespace com.victorafael.EditorEditor {
     public class ToolbarButton<T> where T : VisualElement {
+        public event Action<ToolbarButton<T>> onClick;
         private const string spriteRoot = "Scripts/Editor/Resources/{0}";
 
         private Action<T> setupElement;
@@ -41,10 +42,10 @@ namespace com.victorafael.EditorEditor {
         }
 
         public void OnClick() {
-
+            onClick?.Invoke(this);
         }
 
-        public T GetNew() {
+        public T GetNewElement() {
             var element = Activator.CreateInstance<T>();
 
             setupElement?.Invoke(element);

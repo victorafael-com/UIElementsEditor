@@ -98,6 +98,12 @@ namespace com.victorafael.EditorEditor {
             SetVisible(childContainer, true);
         }
 
+        public void Destroy() {
+            targetElement.RemoveFromHierarchy();
+            root.RemoveFromHierarchy();
+        }
+
+
         public void AppendTo(VisualElement parent, int index = -1) {
             if (index < 0) {
                 parent.Add(root);
@@ -106,13 +112,19 @@ namespace com.victorafael.EditorEditor {
             }
         }
 
-        public void Destroy() {
-            targetElement.RemoveFromHierarchy();
-            root.RemoveFromHierarchy();
-        }
-
+        /// <summary>
+        /// Attaches the tree element on item and Moves targetElement to item.targetElement
+        /// </summary>
+        /// <param name="item">The item to attach this treeVIewItem</param>
+        /// <param name="index">The index to insert (-1 = last item)</param>
         public void AppendTo(TreeViewItem item, int index = -1) {
             AppendTo(item.childContainer, index);
+
+            if(index < 0) {
+                item.targetElement.Add(targetElement);
+            } else {
+                item.targetElement.Insert(index, targetElement);
+            }
         }
 
         bool IsVisible(VisualElement element) {

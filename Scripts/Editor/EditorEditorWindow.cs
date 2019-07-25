@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -96,12 +97,17 @@ namespace com.victorafael.EditorEditor {
         void CreateToolbar() {
             VisualElement layoutArea = CreateToolbarArea("Layout");
 
-            new ToolbarButton<VisualElement>("empty-horizontal.png", "Horizontal", layoutArea, (VisualElement ve) => ve.style.flexDirection = FlexDirection.Row);
-            new ToolbarButton<VisualElement>("empty-vertical.png", "Vertical", layoutArea);
-            new ToolbarButton<Label>("label.png", "Label", layoutArea, (Label l) => l.text = "New Label");
+            CreateButton<VisualElement>("empty-horizontal.png", "Horizontal", layoutArea, (VisualElement ve) => ve.style.flexDirection = FlexDirection.Row);
+            CreateButton<VisualElement>("empty-vertical.png", "Vertical", layoutArea);
+            CreateButton<Label>("label.png", "Label", layoutArea, (Label l) => l.text = "New Label");
 
             VisualElement inputArea = CreateToolbarArea("Input");
-            new ToolbarButton<Button>("button.png", "Button", inputArea, (Button b) => b.text = "New Button");
+            CreateButton<Button>("button.png", "Button", inputArea, (Button b) => b.text = "New Button");
+        }
+
+        void CreateButton<T>(string image, string label, VisualElement parent, Action<T> action = null) where T : VisualElement {
+            var button = new ToolbarButton<T>(image, label, parent, action);
+            button.onClick += OnClickToolbarItem;
         }
 
         VisualElement CreateToolbarArea(string label) {
@@ -120,9 +126,9 @@ namespace com.victorafael.EditorEditor {
         void CreateTestLabel() {
             var label = new Label();
 
-            int id = Random.Range(1, 5000);
+            int id = UnityEngine.Random.Range(1, 5000);
             label.text = "Random: " + id;
-            if (Random.value < 0.5f) {
+            if (UnityEngine.Random.value < 0.5f) {
                 label.name = "label_" + id;
             }
 
@@ -171,6 +177,18 @@ namespace com.victorafael.EditorEditor {
                     }
                     break;
             }
+        }
+
+        private void OnClickToolbarItem<T>(ToolbarButton<T> button) where T : VisualElement {
+            var target = selectedItem != null ? selectedItem : rootItem;
+
+            var element = button.GetNewElement();
+
+            var treeItem = CreateTreeViewItem(element);
+
+            treeItem.AppendTo(target);
+
+            SetParent(element, target.targetElement);
         }
 
         void SetParent(VisualElement element, VisualElement newParent, int index = -1) {
