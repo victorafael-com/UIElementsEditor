@@ -4,116 +4,152 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace com.victorafael.EditorEditor { 
-	public class EditorEditorWindow : EditorWindow
-	{
-		private TreeViewItem rootItem;
+namespace com.victorafael.EditorEditor {
+    public class EditorEditorWindow : EditorWindow {
+        private static string basePath = null;
 
-		private TreeViewItem selectedItem;
-		private ElementInspector inspector;
+        private TreeViewItem rootItem;
 
-		private Box treeViewContainer;
-		private VisualElement previewRoot;
+        private TreeViewItem selectedItem;
+        private ElementInspector inspector;
 
-		private Dictionary<VisualElement, TreeViewItem> treeViewMap;
+        private VisualElement toolbarRoot;
+        private Box treeViewContainer;
+        private VisualElement previewRoot;
 
-		[MenuItem("Window/UIElements/EditorEditorWindow")]
-		public static void ShowExample() {
-			EditorEditorWindow wnd = GetWindow<EditorEditorWindow>();
-			wnd.titleContent = new GUIContent("Editor Editor Window");
-		}
+        private Dictionary<VisualElement, TreeViewItem> treeViewMap;
 
-		public void OnEnable() {
-			SetVisual();
-		}
+        public static string BasePath => basePath;
 
-		void SetVisual() {
-			VisualElement root = rootVisualElement;
+        [MenuItem("Window/UIElements/EditorEditorWindow")]
+        public static void ShowExample() {
+            EditorEditorWindow wnd = GetWindow<EditorEditorWindow>();
+            wnd.titleContent = new GUIContent("Editor Editor Window");
+        }
 
-			root.Clear();
+        public void OnEnable() {
+            //Sets the base path (In case of renaming or moving folder)
+            var asset = MonoScript.FromScriptableObject(this);
+            string myPath = AssetDatabase.GetAssetPath(asset);
+            basePath = myPath.Substring(0, myPath.IndexOf("Scripts/Editor")) + "{0}";
 
-			var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UIElementsEditor/Styles/Editor/EditorEditorWindow.uxml");
-			VisualElement labelFromUXML = visualTree.CloneTree();
-			root.Add(labelFromUXML);
+            SetVisual();
+        }
 
-			var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/UIElementsEditor/Styles/Editor/EditorEditorWindow.uss");
+        void SetVisual() {
+            VisualElement root = rootVisualElement;
 
-			root.styleSheets.Add(styleSheet);
+            root.Clear();
 
-			//Tree View
-			treeViewContainer = root.Q<Box>("treeViewContainer");
+            //var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UIElementsEditor/Styles/Editor/EditorEditorWindow.uxml");
+            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(string.Format(basePath, "Styles/Editor/EditorEditorWindow.uxml"));
+            //var visualTree = LoadFromRelativePath<VisualTreeAsset>("EditorEditorWindow.uxml");
+            VisualElement labelFromUXML = visualTree.CloneTree();
+            root.Add(labelFromUXML);
 
-			treeViewMap = new Dictionary<VisualElement, TreeViewItem>();
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(string.Format(basePath, "Styles/Editor/EditorEditorWindow.uss"));
 
-			previewRoot = root.Q<VisualElement>("PreviewRoot");
-			
-			rootItem = CreateTreeViewItem(previewRoot);
-			rootItem.IsRoot = false;
+            root.styleSheets.Add(styleSheet);
 
-			rootItem.AppendTo(treeViewContainer);
+            //Tree View
+            treeViewContainer = root.Q<Box>("treeViewContainer");
 
+            treeViewMap = new Dictionary<VisualElement, TreeViewItem>();
 
-			for (int i = 0; i < 3; i++) { 
-				CreateTestLabel();
-			}
+            previewRoot = root.Q<VisualElement>("PreviewRoot");
 
+            rootItem = CreateTreeViewItem(previewRoot);
+            rootItem.IsRoot = true;
 
-			//Inspector
-			inspector = new ElementInspector(root.Q<VisualElement>("inspectorRoot"));
-			inspector.onChangeProperty += OnChangeInspector;
+            rootItem.AppendTo(treeViewContainer);
 
-			///////
-			var button = new Button(() => {
-				SetVisual();
-			});
-			button.text = "Reload";
-			root.Add(button);
-		}
+            for (int i = 0; i < 3; i++) {
+                CreateTestLabel();
+            }
 
-		void CreateTestLabel() {
-			var label = new Label();
-
-			int id = Random.Range(1, 5000);
-			label.text = "Random: " + id;
-			if(Random.value < 0.5f) {
-				label.name = "label_" + id;
-			}
-
-			previewRoot.Add(label);
-
-			var treeViewItem = CreateTreeViewItem(label);
-
-			SetParent(label, previewRoot);
-		}
-
-		TreeViewItem CreateTreeViewItem(VisualElement element) {
-			var item = new TreeViewItem(element);
-			treeViewMap.Add(element, item);
-			item.onClick += OnClickTreeViewItem;
-			return item;
-		}
+            //Inspector
+            inspector = new ElementInspector(root.Q<VisualElement>("inspectorRoot"));
+            inspector.onChangeProperty += OnChangeInspector;
 
 
-		private void OnChangeInspector() {
-			selectedItem.UpdateDisplay();
-		}
+            //Toolbar
+            toolbarRoot = root.Q<VisualElement>("toolbarRoot");
+            CreateToolbar();
 
-		private void OnClickTreeViewItem(TreeViewItem obj) {
-			if (selectedItem != null)
-				selectedItem.Selected = false;
-			inspector.SetupInspector(obj.targetElement);
-			selectedItem = obj;
-			selectedItem.Selected = true;
-		}
 
-		void SetParent(VisualElement element, VisualElement newParent, int index = -1) {
-			if (treeViewMap.ContainsKey(newParent) && treeViewMap.ContainsKey(element)) {
-				var parent = treeViewMap[newParent];
-				treeViewMap[element].AppendTo(parent, index);
-				parent.UpdateDisplay();
-			}
-		}
+            ///////
+            var button = new Button(() => {
+                SetVisual();
+            });
+            button.text = "Reload";
+            root.Add(button);
+        }
 
-		
-	}
+        void CreateToolbar() {
+            VisualElement layoutArea = CreateToolbarArea("Layout");
+
+            new ToolbarButton<VisualElement>("empty-horizontal.png", "Horizontal", layoutArea, (VisualElement ve) => ve.style.flexDirection = FlexDirection.Row);
+            new ToolbarButton<VisualElement>("empty-vertical.png", "Vertical", layoutArea);
+            new ToolbarButton<Label>("label.png", "Label", layoutArea, (Label l) => l.text = "New Label");
+
+            VisualElement inputArea = CreateToolbarArea("Input");
+            new ToolbarButton<Button>("button.png", "Button", inputArea, (Button b) => b.text = "New Button");
+        }
+
+        VisualElement CreateToolbarArea(string label) {
+            var root = new VisualElement();
+
+            var lbl = new Label(label);
+            lbl.AddToClassList("eeditor-toolbarHeader");
+
+            root.Add(lbl);
+
+            toolbarRoot.Add(root);
+
+            return root;
+        }
+
+        void CreateTestLabel() {
+            var label = new Label();
+
+            int id = Random.Range(1, 5000);
+            label.text = "Random: " + id;
+            if (Random.value < 0.5f) {
+                label.name = "label_" + id;
+            }
+
+            previewRoot.Add(label);
+
+            var treeViewItem = CreateTreeViewItem(label);
+
+            SetParent(label, previewRoot);
+        }
+
+        TreeViewItem CreateTreeViewItem(VisualElement element) {
+            var item = new TreeViewItem(element);
+            treeViewMap.Add(element, item);
+            item.onClick += OnClickTreeViewItem;
+            return item;
+        }
+
+        private void OnChangeInspector() {
+            selectedItem.UpdateDisplay();
+        }
+
+        private void OnClickTreeViewItem(TreeViewItem obj) {
+            if (selectedItem != null)
+                selectedItem.Selected = false;
+            inspector.SetupInspector(obj.targetElement);
+            selectedItem = obj;
+            selectedItem.Selected = true;
+        }
+
+        void SetParent(VisualElement element, VisualElement newParent, int index = -1) {
+            if (treeViewMap.ContainsKey(newParent) && treeViewMap.ContainsKey(element)) {
+                var parent = treeViewMap[newParent];
+                treeViewMap[element].AppendTo(parent, index);
+                parent.UpdateDisplay();
+            }
+        }
+    }
 }

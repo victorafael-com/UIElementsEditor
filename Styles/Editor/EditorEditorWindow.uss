@@ -1,12 +1,9 @@
 .eeditor-root{
     flex-direction:row;
-    min-width:800px;
+    min-width:814px; /* 64 + 250*3 */
     padding:10px;
 }
 
-.eeditor-toolbar{
-	width: 50px;
-}
 .eeditor-panel{ 
     width:250px;
     margin-left:5px;
@@ -18,6 +15,22 @@
 .eeditor-panelTitle{
     font-weight:bold;
     font-size:12px;
+}
+
+/*** ToolBar ***/
+.eeditor-toolbar {
+    width: 64px;
+}
+.eeditor-toolbarButton{
+    padding: 4px 0 0 0;
+}
+.eeditor-toolbarButton .eeditor-icon {
+    width: 32px;
+    height: 16px;
+    align-self: center;
+}
+.eeditor-toolbarButton Label{
+    font-size:10px;
 }
 
 /*** Tree View ***/

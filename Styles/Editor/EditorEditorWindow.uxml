@@ -15,9 +15,7 @@ xsi:schemaLocation="
   <VisualElement class="eeditor-root">
     
     <VisualElement class="eeditor-toolbar">
-      <Button text="Empty"></Button>
-      <Button text="Label"></Button>
-      <Button text="Button"></Button>
+      <VisualElement name="toolbarRoot"></VisualElement>
     </VisualElement>
     
     <VisualElement class="eeditor-panel">
