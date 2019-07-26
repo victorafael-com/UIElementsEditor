@@ -18,9 +18,16 @@ namespace com.victorafael.EditorEditor {
         private Box treeViewContainer;
         private VisualElement previewRoot;
 
+        private Label dragHandler;
+        private IDraggableItem currentDraggable;
+        public DropTargetInfo currentDropTarget;
+
+
         private Dictionary<VisualElement, TreeViewItem> treeViewMap;
 
         public static string BasePath => basePath;
+
+        public bool IsDragging { get; private set; }
 
         [MenuItem("Window/UIElements/EditorEditorWindow")]
         public static void ShowExample() {
@@ -72,6 +79,14 @@ namespace com.victorafael.EditorEditor {
             toolbarRoot = root.Q<VisualElement>("toolbarRoot");
             CreateToolbar();
 
+            //Drag Label
+            dragHandler = new Label();
+            dragHandler.AddToClassList("eeditor-dragLabel");
+            dragHandler.focusable = false;
+            dragHandler.style.display = DisplayStyle.None;
+
+            root.Add(dragHandler);
+
             ///////
             var button = new Button(() => {
                 SetVisual();
@@ -102,7 +117,7 @@ namespace com.victorafael.EditorEditor {
         }
 
         void CreateButton<T>(string image, string label, VisualElement parent, Action<T> action = null) where T : VisualElement {
-            var button = new ToolbarButton<T>(image, label, parent, action);
+            var button = new ToolbarButton<T>(this, image, label, parent, action);
             button.onClick += OnClickToolbarItem;
         }
 
@@ -120,7 +135,7 @@ namespace com.victorafael.EditorEditor {
         }
 
         TreeViewItem CreateTreeViewItem(VisualElement element) {
-            var item = new TreeViewItem(element);
+            var item = new TreeViewItem(this, element);
             treeViewMap.Add(element, item);
             item.onClick += OnClickTreeViewItem;
             return item;
@@ -168,6 +183,30 @@ namespace com.victorafael.EditorEditor {
             inspector.Clear();
         }
 
+        public void StartDrag(IDraggableItem draggable) {
+            currentDraggable = draggable;
+            rootVisualElement.AddToClassList("eeditor-dragging");
+            IsDragging = true;
+        }
+
+        public void ClearDrag() {
+            rootVisualElement.RemoveFromClassList("eeditor-dragging");
+            rootVisualElement.MarkDirtyRepaint();
+            IsDragging = false;
+        }
+
+        public void DragComplete() {
+            if (currentDropTarget != null) {
+                var element = currentDraggable.GetElement();
+
+                var treeItem = CreateTreeViewItem(element);
+
+                SetParent(element, currentDropTarget.element);
+            } 
+
+            currentDraggable = null;
+        }
+
         private void OnClickToolbarItem<T>(ToolbarButton<T> button) where T : VisualElement {
             var target = selectedItem != null ? selectedItem : rootItem;
 
@@ -175,7 +214,7 @@ namespace com.victorafael.EditorEditor {
 
             var treeItem = CreateTreeViewItem(element);
 
-            treeItem.AppendTo(target);
+           // treeItem.AppendTo(target);
 
             SetParent(element, target.targetElement);
         }

@@ -57,12 +57,25 @@
 .eeditor-dropLine{
     background-color:rgba(0,100,255, 0.4);
     margin-right:5px;
-    height:2px;
-    display:none;
+    display: none;
 }
 .eeditor-invisible *{
     opacity: 0.3;
 }
+
+/*** Dragging ***/
+.eeditor-dragging *{
+    cursor: move-arrow;
+}
+.eeditor-dragging .eeditor-treeViewElementLine:hover{
+    background-color: rgba(0, 180, 255, 0.8);
+}
+/*
+.eeditor-dragging .eeditor-treeViewLineChildren:hover .eeditor-dropLine {
+    height: 5px;
+    display: flex;
+}*/
+
 /*** Preview ***/
 .eeditor-previewContainer {
     border: 1px solid #000;

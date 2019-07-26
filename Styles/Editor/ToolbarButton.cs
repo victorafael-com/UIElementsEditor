@@ -6,18 +6,22 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace com.victorafael.EditorEditor {
-    public class ToolbarButton<T> where T : VisualElement {
+    public class ToolbarButton<T> : IDraggableItem where T : VisualElement {
         public event Action<ToolbarButton<T>> onClick;
         private const string spriteRoot = "Scripts/Editor/Resources/{0}";
 
         private Action<T> setupElement;
 
         private Button m_button;
+        private string label;
+        private EditorEditorWindow editor;
 
         public Button Button => m_button;
 
-        public ToolbarButton(string sprite, string label, VisualElement root, Action<T> setup = null) {
+        public ToolbarButton(EditorEditorWindow editor, string sprite, string label, VisualElement root, Action<T> setup = null) {
             setupElement = setup;
+            this.label = label;
+            this.editor = editor;
 
             m_button = new Button(OnClick);
             m_button.AddToClassList("eeditor-toolbarButton");
@@ -28,17 +32,16 @@ namespace com.victorafael.EditorEditor {
             icon.style.backgroundImage = AssetDatabase.LoadAssetAtPath<Texture2D>(
                 string.Format(EditorEditorWindow.BasePath, string.Format(spriteRoot, sprite))
             );
-
+            //icon.pickingMode = PickingMode.Ignore;
             m_button.Add(icon);
-            m_button.Add(new Label(label));
 
-            m_button.RegisterCallback<DragUpdatedEvent>(DragUpdated);
+            var lbl = new Label(label);
+            //lbl.pickingMode = PickingMode.Ignore;
+            m_button.Add(lbl);
+
+            m_button.AddManipulator(new DragManipulator(this, editor));
 
             root.Add(m_button);
-        }
-
-        void DragUpdated(DragUpdatedEvent upd) {
-            Debug.Log("Updated");
         }
 
         public void OnClick() {
@@ -51,6 +54,14 @@ namespace com.victorafael.EditorEditor {
             setupElement?.Invoke(element);
 
             return element;
+        }
+
+        public VisualElement GetElement() {
+            return GetNewElement();
+        }
+
+        public string GetDragLabel() {
+            return label;
         }
     }
 }

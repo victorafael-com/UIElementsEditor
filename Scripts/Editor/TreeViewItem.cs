@@ -11,6 +11,7 @@ namespace com.victorafael.EditorEditor {
 
         public VisualElement targetElement;
 
+        private EditorEditorWindow editor;
         private VisualElement root;
 
         private Foldout expandToggle;
@@ -35,10 +36,10 @@ namespace com.victorafael.EditorEditor {
             }
         }
 
-        public TreeViewItem(VisualElement element) {
+        public TreeViewItem(EditorEditorWindow editor, VisualElement element) {
             var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(string.Format(EditorEditorWindow.BasePath, "Styles/Editor/TreeViewItem.uxml"));
             root = visualTree.CloneTree();
-
+            this.editor = editor;
             targetElement = element;
 
             itemHandler = root.Q<Button>("dragHandler");
@@ -61,6 +62,8 @@ namespace com.victorafael.EditorEditor {
         void RegisterEvents() {
             itemHandler.clickable.clicked += OnClickHandler;
             expandToggle.RegisterValueChangedCallback(ToggleDisplayChildren);
+
+            itemHandler.AddManipulator(new DropManipulator(editor, new DropTargetInfo(targetElement)));
         }
 
         void OnClickHandler() {
