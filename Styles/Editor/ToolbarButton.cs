@@ -26,20 +26,22 @@ namespace com.victorafael.EditorEditor {
             m_button = new Button(OnClick);
             m_button.AddToClassList("eeditor-toolbarButton");
 
+            var elements = new VisualElement(); //This will solve the button focusing issues when clicking to the right or left from 
+
             var icon = new VisualElement();
             icon.AddToClassList("eeditor-icon");
 
             icon.style.backgroundImage = AssetDatabase.LoadAssetAtPath<Texture2D>(
                 string.Format(EditorEditorWindow.BasePath, string.Format(spriteRoot, sprite))
             );
-            //icon.pickingMode = PickingMode.Ignore;
-            m_button.Add(icon);
+            elements.Add(icon);
 
             var lbl = new Label(label);
-            //lbl.pickingMode = PickingMode.Ignore;
-            m_button.Add(lbl);
+            elements.Add(lbl);
 
-            m_button.AddManipulator(new DragManipulator(this, editor));
+            m_button.Add(elements);
+
+            m_button.AddManipulator(new DragStarterManipulator(this, editor));
 
             root.Add(m_button);
         }

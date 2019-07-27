@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace com.victorafael.EditorEditor {
-    public class DropManipulator : MouseManipulator {
+    public class DropTargetManipulator : MouseManipulator {
         private bool m_isHover = false;
         private EditorEditorWindow m_editor;
         private DropTargetInfo m_dropInfo;
 
-        public DropManipulator(EditorEditorWindow editor, DropTargetInfo dropInfo) {
+        public DropTargetManipulator(EditorEditorWindow editor, DropTargetInfo dropInfo) {
             activators.Add(new ManipulatorActivationFilter { button = MouseButton.LeftMouse });
 
             m_isHover = false;

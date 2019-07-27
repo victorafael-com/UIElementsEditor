@@ -52,8 +52,8 @@ namespace com.victorafael.EditorEditor {
             //var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UIElementsEditor/Styles/Editor/EditorEditorWindow.uxml");
             var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(string.Format(basePath, "Styles/Editor/EditorEditorWindow.uxml"));
             //var visualTree = LoadFromRelativePath<VisualTreeAsset>("EditorEditorWindow.uxml");
-            VisualElement labelFromUXML = visualTree.CloneTree();
-            root.Add(labelFromUXML);
+            VisualElement content = visualTree.CloneTree();
+            root.Add(content);
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(string.Format(basePath, "Styles/Editor/EditorEditorWindow.uss"));
 
@@ -95,7 +95,7 @@ namespace com.victorafael.EditorEditor {
             root.Add(button);
         }
 
-        private void OnGUI() {
+        private void OnGUI() { 
             //I will evaluate keyboard events here while I'm trying to figure out how to handle them on UIElements
             var evt = Event.current;
             switch (evt.type) {

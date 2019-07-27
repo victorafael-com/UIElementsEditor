@@ -63,7 +63,7 @@ namespace com.victorafael.EditorEditor {
             itemHandler.clickable.clicked += OnClickHandler;
             expandToggle.RegisterValueChangedCallback(ToggleDisplayChildren);
 
-            itemHandler.AddManipulator(new DropManipulator(editor, new DropTargetInfo(targetElement)));
+            itemHandler.AddManipulator(new DropTargetManipulator(editor, new DropTargetInfo(targetElement)));
         }
 
         void OnClickHandler() {
