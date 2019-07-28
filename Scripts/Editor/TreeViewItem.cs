@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace com.victorafael.EditorEditor {
-    public class TreeViewItem {
+    public class TreeViewItem : IDraggableItem {
         public event Action<TreeViewItem> onClick;
 
         public VisualElement targetElement;
@@ -55,6 +55,8 @@ namespace com.victorafael.EditorEditor {
 
             expandToggle.value = false;
             SetVisible(childContainer, false);
+
+            itemHandler.AddManipulator(new DragStarterManipulator(this, editor));
 
             RegisterEvents();
         }
@@ -135,6 +137,14 @@ namespace com.victorafael.EditorEditor {
         }
         void SetVisible(VisualElement element, bool visible) {
             element.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        public VisualElement GetElement() {
+            return targetElement;
+        }
+
+        public string GetDragLabel() {
+            return targetElement.GetType().ToString();
         }
     }
 }
