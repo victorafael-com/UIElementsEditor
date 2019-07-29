@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 namespace com.victorafael.EditorEditor { 
     public interface IDraggableItem
     {
+        bool CanDrag { get; }
         VisualElement GetElement();
         string GetDragLabel();
     }

@@ -33,7 +33,7 @@ namespace com.victorafael.EditorEditor {
                 return;
             }
 
-            if (CanStartManipulation(e)) {
+            if (CanStartManipulation(e) && m_draggable.CanDrag) {
                 m_active = true;
                 m_editor.StartDrag(m_draggable);
                 target.CaptureMouse();

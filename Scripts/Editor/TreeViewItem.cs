@@ -56,8 +56,6 @@ namespace com.victorafael.EditorEditor {
             expandToggle.value = false;
             SetVisible(childContainer, false);
 
-            itemHandler.AddManipulator(new DragStarterManipulator(this, editor));
-
             RegisterEvents();
         }
 
@@ -65,6 +63,7 @@ namespace com.victorafael.EditorEditor {
             itemHandler.clickable.clicked += OnClickHandler;
             expandToggle.RegisterValueChangedCallback(ToggleDisplayChildren);
 
+            itemHandler.AddManipulator(new DragStarterManipulator(this, editor));
             itemHandler.AddManipulator(new DropTargetManipulator(editor, new DropTargetInfo(targetElement)));
         }
 
@@ -139,6 +138,9 @@ namespace com.victorafael.EditorEditor {
             element.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
+        #region IDraggableItem
+        public bool CanDrag => !IsRoot;
+
         public VisualElement GetElement() {
             return targetElement;
         }
@@ -146,5 +148,6 @@ namespace com.victorafael.EditorEditor {
         public string GetDragLabel() {
             return targetElement.GetType().ToString();
         }
+        #endregion
     }
 }

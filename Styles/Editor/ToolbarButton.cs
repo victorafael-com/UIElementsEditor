@@ -58,6 +58,9 @@ namespace com.victorafael.EditorEditor {
             return element;
         }
 
+        #region IDraggableItem
+        public bool CanDrag => true;
+
         public VisualElement GetElement() {
             return GetNewElement();
         }
@@ -65,5 +68,6 @@ namespace com.victorafael.EditorEditor {
         public string GetDragLabel() {
             return label;
         }
+        #endregion
     }
 }
