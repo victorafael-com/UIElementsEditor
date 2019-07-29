@@ -199,10 +199,12 @@ namespace com.victorafael.EditorEditor {
             if (currentDropTarget != null) {
                 var element = currentDraggable.GetElement();
 
-                if (!treeViewMap.ContainsKey(element)) { 
-                    CreateTreeViewItem(element);
+                if(element != currentDropTarget.element) { 
+                    if (!treeViewMap.ContainsKey(element)) { 
+                        CreateTreeViewItem(element);
+                    }
+                    SetParent(element, currentDropTarget.element);
                 }
-                SetParent(element, currentDropTarget.element);
             } 
 
             currentDraggable = null;
