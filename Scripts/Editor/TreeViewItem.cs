@@ -13,6 +13,7 @@ namespace com.victorafael.EditorEditor {
 
         private EditorEditorWindow editor;
         private VisualElement root;
+        private TreeViewItem currentParent;
 
         private Foldout expandToggle;
         private Label nameLabel;
@@ -124,11 +125,16 @@ namespace com.victorafael.EditorEditor {
         public void AppendTo(TreeViewItem item, int index = -1) {
             AppendTo(item.childContainer, index);
 
-            if(index < 0) {
+            if (index < 0) {
                 item.targetElement.Add(targetElement);
             } else {
                 item.targetElement.Insert(index, targetElement);
             }
+
+            if (currentParent != null) {
+                currentParent.UpdateDisplay();
+            }
+            currentParent = item;
         }
 
         bool IsVisible(VisualElement element) {
