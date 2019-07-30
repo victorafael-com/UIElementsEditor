@@ -63,6 +63,24 @@
     opacity: 0.3;
 }
 
+/*** Inspector ***/
+.eeditor-styleScroll{
+    flex-grow:1;
+    flex-wrap:wrap;
+    overflow:hidden;
+    max-height:280px;
+}
+.eeditor-inspectorProperty{
+    flex-direction:row;
+    flex-grow:1;
+}
+.eeditor-inspectorField{
+    flex-grow:1;
+}
+.eeditor-inspectorLabel{
+    width:120px;
+}
+
 /*** Dragging ***/
 .eeditor-dragging *{
     cursor: move-arrow;

@@ -13,9 +13,9 @@ namespace com.victorafael.EditorEditor {
 
         private VisualElement root;
 
-
         private VisualElement visualElementRoot;
         private VisualElement textElementRoot;
+        private VisualElement styleElementRoot;
 
 
         public ElementInspector(VisualElement root) {
@@ -35,12 +35,12 @@ namespace com.victorafael.EditorEditor {
 
             if (target is TextElement)
                 CreateTextElementInspector(root);
+
+
+            CreateStyleInspector();
         }
 
         void CreateVisualElementInspector(VisualElement root) {
-            /*visualElementRoot = new VisualElement();
-			root.Add(visualElementRoot);*/
-
             visualElementRoot = CreateInspectorArea(root, "VisualElement");
 
             CreateInspectorLine<string>("Name", target.name, (string s) => target.name = s, visualElementRoot);
@@ -50,17 +50,33 @@ namespace com.victorafael.EditorEditor {
         void CreateTextElementInspector(VisualElement root) {
             TextElement textElement = (TextElement)target;
 
-            textElementRoot = CreateInspectorArea(root, "TextElemnt");
+            textElementRoot = CreateInspectorArea(root, "Text Element");
 
             float fontSize = textElement.style.fontSize.value.value;
             if (fontSize < 1)
                 fontSize = 11;
 
             CreateInspectorLine<string>("Text", textElement.text, (string s) => textElement.text = s, textElementRoot);
-            CreateInspectorLine<Enum>("Font Style", textElement.style.unityFontStyleAndWeight.value, (Enum f) => textElement.style.unityFontStyleAndWeight = (FontStyle)f, textElementRoot);
-            CreateInspectorLine<float>("Font Size", fontSize, (float v) => textElement.style.fontSize = v, textElementRoot);
-            CreateInspectorLine<Color>("Color", textElement.style.color.value, (Color c) => textElement.style.color = NoAlpha(c), textElementRoot);
+           // CreateInspectorLine<Enum>("Font Style", textElement.style.unityFontStyleAndWeight.value, (Enum f) => textElement.style.unityFontStyleAndWeight = (FontStyle)f, textElementRoot);
+           // CreateInspectorLine<float>("Font Size", fontSize, (float v) => textElement.style.fontSize = v, textElementRoot);
+           // CreateInspectorLine<Color>("Color", textElement.style.color.value, (Color c) => textElement.style.color = NoAlpha(c), textElementRoot);
+        }
 
+        void CreateStyleInspector() {
+            styleElementRoot = CreateInspectorArea(root, "Style");
+
+            var scroll = new ScrollView();
+            scroll.AddToClassList("eeditor-styleScroll");
+
+            //target.style.
+            var props = typeof(IStyle).GetProperties();
+            var style = target.style;
+
+            foreach (var p in props) {
+
+                scroll.Add(InspectorStyleLine.GetLine(style, p, p.Name));
+            }
+            styleElementRoot.Add(scroll);
         }
 
         VisualElement CreateInspectorArea(VisualElement root, string title) {
@@ -96,7 +112,7 @@ namespace com.victorafael.EditorEditor {
 
         #region Inspector Fields
 
-        INotifyValueChanged<T> GetField<T>(string label, T value, out VisualElement field) {
+        public static INotifyValueChanged<T> GetField<T>(string label, T value, out VisualElement field) {
             var type = typeof(T);
 
             field = null;
@@ -111,7 +127,7 @@ namespace com.victorafael.EditorEditor {
                 field = new EnumField(label, Convert<Enum>(value));
             else if (type == typeof(Color)) {
                 field = new ColorField(label);
-                ((ColorField)field).showAlpha = false;
+                ((ColorField)field).showAlpha = true;
             } else if (type == typeof(float))
                 field = new FloatField(label);
             else
@@ -140,7 +156,7 @@ namespace com.victorafael.EditorEditor {
             return c;
         }
 
-        T Convert<T>(object value) {
+        static T Convert<T>(object value) {
             return (T)System.Convert.ChangeType(value, typeof(T));
         }
 
